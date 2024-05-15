@@ -45,5 +45,12 @@ services:
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
       cub kafka-ready -b kafka0:29092 1 30 && \
       kafka-topics --create --topic accounting-events --partitions 2 --replication-factor 1 --if-not-exists --bootstrap-server kafka0:29092'"
-
+  rsend:
+    image: rsend
+    build: ./rsend/
+    ports:
+      - "8081:8080"
+    depends_on:
+      kafka0:
+        condition: service_healthy
 
