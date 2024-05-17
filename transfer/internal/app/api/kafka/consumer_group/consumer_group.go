@@ -2,12 +2,12 @@ package consumer_group
 
 import (
 	"context"
-	"github.com/volnistii11/accounting_service/transfer/internal/app/api/kafka"
 	"log"
 	"sync"
 	"time"
 
 	"github.com/IBM/sarama"
+	"github.com/volnistii11/accounting_service/transfer/internal/app/api/kafka"
 )
 
 type Config struct {
@@ -34,7 +34,6 @@ func NewConsumerGroup(kafkaConfig kafka.Config, groupConfig Config, consumerGrou
 	config.Consumer.Offsets.AutoCommit.Enable = true
 	config.Consumer.Offsets.AutoCommit.Interval = 5 * time.Second
 
-	// Применяем свои конфигурации
 	for _, opt := range opts {
 		opt.Apply(config)
 	}
@@ -58,13 +57,10 @@ func (c *consumerGroup) Run(ctx context.Context, wg *sync.WaitGroup) {
 		log.Println("[consumer-group] run")
 
 		for {
-			// `Consume` should be called inside an infinite loop, when a
-			// server-side rebalance happens, the consumer session will need to be
-			// recreated to get the new claims
 			if err := c.ConsumerGroup.Consume(ctx, c.topics, c.handler); err != nil {
 				log.Printf("Error from consume: %v\n", err)
 			}
-			// check if context was cancelled, signaling that the consumer should stop
+
 			if ctx.Err() != nil {
 				log.Printf("[consumer-group]: ctx closed: %s\n", ctx.Err().Error())
 				return

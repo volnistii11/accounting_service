@@ -3,13 +3,14 @@ package app
 import (
 	"context"
 	"fmt"
-	consumer_group2 "github.com/volnistii11/accounting_service/transfer/internal/app/api/kafka/consumer_group"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 
 	"github.com/IBM/sarama"
+	"github.com/volnistii11/accounting_service/transfer/internal/app/api/kafka/consumer_group"
+	"github.com/volnistii11/accounting_service/transfer/internal/app/usecase"
 )
 
 type App struct {
@@ -26,12 +27,14 @@ func (a *App) Run() error {
 		ctx  = runSignalHandler(context.Background(), wg)
 	)
 
+	useCase := usecase.NewUseCase()
+
 	fmt.Printf("%+v\n", conf)
-	cg, err := consumer_group2.NewConsumerGroup(
+	cg, err := consumer_group.NewConsumerGroup(
 		conf.kafka,
 		conf.consumerGroup,
-		consumer_group2.NewConsumerGroupHandler(),
-		consumer_group2.WithOffsetsInitial(sarama.OffsetOldest),
+		consumer_group.NewConsumerGroupHandler(useCase),
+		consumer_group.WithOffsetsInitial(sarama.OffsetOldest),
 	)
 	if err != nil {
 		return err

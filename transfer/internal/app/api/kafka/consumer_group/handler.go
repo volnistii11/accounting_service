@@ -1,6 +1,7 @@
 package consumer_group
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 
@@ -8,13 +9,19 @@ import (
 	"github.com/volnistii11/accounting_service/transfer/internal/app/models"
 )
 
-type ConsumerGroupHandler struct {
-	ready chan bool
+type UseCaseProvider interface {
+	CreateMoneyTransfer(ctx context.Context, info models.MoneyTransfer) error
 }
 
-func NewConsumerGroupHandler() *ConsumerGroupHandler {
+type ConsumerGroupHandler struct {
+	useCase UseCaseProvider
+	ready   chan bool
+}
+
+func NewConsumerGroupHandler(useCase UseCaseProvider) *ConsumerGroupHandler {
 	return &ConsumerGroupHandler{
-		ready: make(chan bool),
+		useCase: useCase,
+		ready:   make(chan bool),
 	}
 }
 
@@ -36,15 +43,16 @@ func (h *ConsumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession,
 
 			msg, err := convertMsg(message)
 			if err != nil {
-				log.Printf("Err: %s", err.Error())
+				log.Printf("Error converting message: %s", err.Error())
+				continue
 			}
+
 			log.Printf("Message payload: %+v", msg.Payload)
 
-			data, err := json.Marshal(msg)
-			if err != nil {
-				log.Printf("Err: %s", err.Error())
+			if err = h.useCase.CreateMoneyTransfer(session.Context(), msg.Payload); err != nil {
+				log.Printf("Error creating money transfer: %s", err.Error())
+				continue
 			}
-			log.Printf("Message claimed: %s", data)
 
 			session.MarkMessage(message, "")
 		case <-session.Context().Done():
