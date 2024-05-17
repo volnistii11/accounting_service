@@ -16,7 +16,8 @@ type Event struct {
 	ID              int64     `json:"id"`
 	EventType       EventType `json:"event"`
 	RequestID       int64     `json:"request_id"`
-	UserID          int64     `json:"user_id"`
+	FromUserID      int64     `json:"from_user_id"`
+	ToUserID        int64     `json:"to_user_id"`
 	Sum             int64     `json:"sum"`
 	OperationMoment time.Time `json:"moment"`
 	//IdempotentKey   string    `json:"idempotent_key"`

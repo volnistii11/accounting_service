@@ -27,11 +27,12 @@ type EventFactory struct {
 
 func (f *EventFactory) Create(eventType EventType) Event {
 	return Event{
-		ID:        f.OrderIDGenerator.Generate(),
-		EventType: eventType,
-		RequestID: f.OrderIDGenerator.Generate(),
-		UserID:    f.OrderIDGenerator.Generate(),
-		Sum:       100,
+		ID:         f.OrderIDGenerator.Generate(),
+		EventType:  eventType,
+		RequestID:  f.OrderIDGenerator.Generate(),
+		FromUserID: f.OrderIDGenerator.Generate(),
+		ToUserID:   f.OrderIDGenerator.Generate(),
+		Sum:        100,
 		//IdempotentKey:   f.IdempotentKey.Generate(),
 		OperationMoment: f.OperationMoment.Generate(),
 	}
