@@ -61,4 +61,9 @@ services:
     depends_on:
       kafka0:
         condition: service_healthy
+  balance:
+    image: balance
+    build: ./balance/
+    ports:
+      - "50051:50051"
 

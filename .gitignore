@@ -11,4 +11,6 @@ coverage.html
 coverage.out
 /transfer/vendor-proto
 /transfer/bin
+/balance/vendor-proto
+/balance/bin
 /db
