@@ -8,6 +8,8 @@ import (
 type config struct {
 	kafka         kafka.Config
 	consumerGroup consumer_group.Config
+
+	balanceServiceServer string
 }
 
 func newConfig(f flags) config {
@@ -21,5 +23,6 @@ func newConfig(f flags) config {
 			GroupName: f.consumerGroupName,
 			Topics:    []string{f.topic},
 		},
+		balanceServiceServer: f.balanceServiceServer,
 	}
 }

@@ -3,7 +3,13 @@ module github.com/volnistii11/accounting_service/transfer
 go 1.22.0
 
 require (
-	github.com/IBM/sarama v1.43.2 // indirect
+	github.com/IBM/sarama v1.43.2
+	github.com/envoyproxy/protoc-gen-validate v1.0.4
+	google.golang.org/grpc v1.64.0
+	google.golang.org/protobuf v1.34.1
+)
+
+require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/eapache/go-resiliency v1.6.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20230731223053-c322873962e3 // indirect
@@ -22,4 +28,7 @@ require (
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	golang.org/x/crypto v0.22.0 // indirect
 	golang.org/x/net v0.24.0 // indirect
+	golang.org/x/sys v0.19.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240318140521-94a12d6c2237 // indirect
 )

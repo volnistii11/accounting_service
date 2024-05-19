@@ -11,6 +11,9 @@ import (
 	"github.com/IBM/sarama"
 	"github.com/volnistii11/accounting_service/transfer/internal/app/api/kafka/consumer_group"
 	"github.com/volnistii11/accounting_service/transfer/internal/app/usecase"
+	desc "github.com/volnistii11/accounting_service/transfer/pkg/api/transfer/v1"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type App struct {
@@ -27,7 +30,12 @@ func (a *App) Run() error {
 		ctx  = runSignalHandler(context.Background(), wg)
 	)
 
-	useCase := usecase.NewUseCase()
+	client, err := newClient(conf.balanceServiceServer)
+	if err != nil {
+		return err
+	}
+
+	useCase := usecase.NewUseCase(client)
 
 	fmt.Printf("%+v\n", conf)
 	cg, err := consumer_group.NewConsumerGroup(
@@ -48,6 +56,20 @@ func (a *App) Run() error {
 	wg.Wait()
 
 	return nil
+}
+
+func newClient(dns string) (desc.TransferClient, error) {
+	clientConn, err := grpc.NewClient(
+		dns,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	client := desc.NewTransferClient(clientConn)
+
+	return client, nil
 }
 
 func runSignalHandler(ctx context.Context, wg *sync.WaitGroup) context.Context {
