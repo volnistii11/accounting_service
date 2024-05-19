@@ -1,0 +1,33 @@
+syntax = 'proto3';
+
+package github.com.volnistii11.accounting_service.transfer;
+
+option go_package = "github.com/volnistii11/accounting_service/transfer/pkg/api/transfer/v1;transfer";
+
+import "google/protobuf/empty.proto";
+import "validate/validate.proto";
+
+service Transfer {
+  rpc CreateMoneyTransfer(CreateMoneyTransferRequest) returns (google.protobuf.Empty) {}
+}
+
+message CreateMoneyTransferRequest {
+  MoneyTransferInfo info = 1 [(validate.rules).message = {
+    required: true;
+  }];
+}
+
+message MoneyTransferInfo {
+  uint32 request_id = 1 [(validate.rules).uint32 = {
+    gt: 0;
+  }];
+  uint32 from_user_id = 2 [(validate.rules).uint32 = {
+    gt: 0;
+  }];
+  uint32 to_user_id = 3 [(validate.rules).uint32 = {
+    gt: 0;
+  }];
+  uint32 sum = 4 [(validate.rules).uint32 = {
+    gt: 0;
+  }];
+}
