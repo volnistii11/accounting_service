@@ -9,8 +9,6 @@
 /.vscode
 coverage.html
 coverage.out
-/loms/vendor-proto
-/loms/bin
-/cart/vendor-proto
-/cart/bin
+/transfer/vendor-proto
+/transfer/bin
 /db
